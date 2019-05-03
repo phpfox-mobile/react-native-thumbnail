@@ -11,6 +11,7 @@ import com.facebook.react.bridge.WritableMap;
 import android.media.ThumbnailUtils;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Video.Thumbnails;
+import android.net.Uri;
 import android.graphics.Bitmap;
 import android.os.Environment;
 import android.util.Log;
@@ -38,8 +39,8 @@ public class RNThumbnailModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void get(String filePath, Promise promise) {
-    filePath = filePath.replace("file://","");
+  public void get(String filePathInput, Promise promise) {
+    String filePath = RealPathUtil.getRealPathFromURI(reactContext, Uri.parse(filePathInput));
     MediaMetadataRetriever retriever = new MediaMetadataRetriever();
     retriever.setDataSource(filePath);
     Bitmap image = retriever.getFrameAtTime(1000000, MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
